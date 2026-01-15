@@ -1,0 +1,64 @@
+name: Playwright API Automation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Setup .NET
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.0'
+
+      # Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Build project
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
+
+      # Run Playwright tests
+      - name: Run Playwright tests
+        run: dotnet test
+
+      # Upload Extent Report artifact
+      - name: Upload Extent Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ExtentReport
+          path: Reports/ExtentReport.html
+
+      # Send Email with PowerShell
+      - name: Email report to stakeholders
+        shell: pwsh
+        run: |
+          $smtpServer = "smtp.gmail.com"
+          $smtpPort   = 587
+          $username   = "${{ secrets.SMTP_USERNAME }}"
+          $password   = "${{ secrets.SMTP_PASSWORD }}"
+          $securePwd  = ConvertTo-SecureString $password -AsPlainText -Force
+          $cred       = New-Object System.Management.Automation.PSCredential($username, $securePwd)
+
+          Send-MailMessage `
+            -From $username `
+            -To "manikandanm441@gmail.com" `
+            -Subject "Playwright API Automation Report" `
+            -Body "Hello Team,<br><br>Please find attached the latest Playwright API automation Extent Report.<br><br>Regards,<br>CI Pipeline" `
+            -BodyAsHtml `
+            -SmtpServer $smtpServer `
+            -Port $smtpPort `
+            -UseSsl `
+            -Credential $cred `
+            -Attachments "Reports/ExtentReport.html"
