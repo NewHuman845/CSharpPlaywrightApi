@@ -32,6 +32,8 @@ jobs:
       # Run Playwright tests
       - name: Run Playwright tests
         run: dotnet test
+        env: 
+            REPORT_PATH: ${{ github.workspace }}/Reports/ExtentReport.html
 
       # Upload Extent Report artifact
       - name: Upload Extent Report
