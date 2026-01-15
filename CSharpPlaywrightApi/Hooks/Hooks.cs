@@ -25,8 +25,7 @@ public class Hooks
             }
         });
 
-       var solutionDir = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\..\..")); var reportPath = Path.Combine(solutionDir, "Reports", "ExtentReport.html");
-        Directory.CreateDirectory(Path.GetDirectoryName(reportPath)!); 
+       var solutionDir = Directory.GetCurrentDirectory(); var reportPath = Path.Combine(solutionDir, "Reports", "ExtentReport.html");Directory.CreateDirectory(Path.GetDirectoryName(reportPath)!); 
         var sparkReporter = new ExtentSparkReporter(reportPath); _extent = new ExtentReports();
         sparkReporter.Config.Theme = AventStack.ExtentReports.Reporter.Config.Theme.Dark;
         sparkReporter.Config.DocumentTitle = "API Automation Report"; 
