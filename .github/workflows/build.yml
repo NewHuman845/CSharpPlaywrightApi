@@ -27,7 +27,7 @@ jobs:
 
       # Build project
       - name: Build project
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --verbosity detailed
 
       # Run Playwright tests
       - name: Run Playwright tests
