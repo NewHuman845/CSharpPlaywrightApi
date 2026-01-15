@@ -35,6 +35,9 @@ jobs:
         env: 
             REPORT_PATH: ${{ github.workspace }}/Reports/ExtentReport.html
 
+      - name: List files
+        run: ls -R
+      
       # Upload Extent Report artifact
       - name: Upload Extent Report
         uses: actions/upload-artifact@v4
