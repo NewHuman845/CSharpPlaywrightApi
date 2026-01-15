@@ -36,7 +36,7 @@ jobs:
             REPORT_PATH: ${{ github.workspace }}/Reports/ExtentReport.html
 
       - name: List files
-        run: ls -R
+        run: ls -R ${{ github.workspace }}
       
       # Upload Extent Report artifact
       - name: Upload Extent Report
