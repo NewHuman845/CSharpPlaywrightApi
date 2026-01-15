@@ -40,25 +40,36 @@ jobs:
           name: ExtentReport
           path: Reports/ExtentReport.html
 
+      - name: Download Extent Report 
+        uses: actions/download-artifact@v4 
+        with: 
+          name: ExtentReport 
+          path: ./Reports
+          
       # Send Email with PowerShell
       - name: Email report to stakeholders
         shell: pwsh
         run: |
+          $reportPath = "./Reports/ExtentReport.html"
           $smtpServer = "smtp.gmail.com"
-          $smtpPort   = 587
-          $username   = "${{ secrets.SMTP_USERNAME }}"
-          $password   = "${{ secrets.SMTP_PASSWORD }}"
-          $securePwd  = ConvertTo-SecureString $password -AsPlainText -Force
-          $cred       = New-Object System.Management.Automation.PSCredential($username, $securePwd)
-
-          Send-MailMessage `
-            -From $username `
-            -To "manikandanm441@gmail.com" `
-            -Subject "Playwright API Automation Report" `
-            -Body "Hello Team,<br><br>Please find attached the latest Playwright API automation Extent Report.<br><br>Regards,<br>CI Pipeline" `
-            -BodyAsHtml `
-            -SmtpServer $smtpServer `
-            -Port $smtpPort `
-            -UseSsl `
-            -Credential $cred `
-            -Attachments "Reports/ExtentReport.html"
+          $smtpPort = 587
+          $username = "${{ secrets.SMTP_USERNAME }}"
+          $password = "${{ secrets.SMTP_PASSWORD }}"
+          $securePwd = ConvertTo-SecureString $password -AsPlainText -Force
+          $cred = New-Object System.Management.Automation.PSCredential($username, $securePwd)
+      
+          if (Test-Path $reportPath) {
+            Send-MailMessage `
+              -From "ci-pipeline@example.com" `
+              -To "stakeholder1@example.com, stakeholder2@example.com" `
+              -Subject "Playwright API Automation Report" `
+              -Body "Hello Team,<br><br>Please find attached the latest Playwright API automation Extent Report.<br><br>Regards,<br>CI Pipeline" `
+              -BodyAsHtml `
+              -SmtpServer $smtpServer `
+              -Port $smtpPort `
+              -UseSsl `
+              -Credential $cred `
+              -Attachments $reportPath
+          } else {
+            Write-Error "Report file not found at $reportPath"
+          }
