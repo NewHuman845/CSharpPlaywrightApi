@@ -65,8 +65,8 @@ jobs:
       
           if (Test-Path $reportPath) {
             Send-MailMessage `
-              -From "ci-pipeline@example.com" `
-              -To "stakeholder1@example.com, stakeholder2@example.com" `
+              -From $username `
+              -To "manikandanm441@gmail.com" `
               -Subject "Playwright API Automation Report" `
               -Body "Hello Team,<br><br>Please find attached the latest Playwright API automation Extent Report.<br><br>Regards,<br>CI Pipeline" `
               -BodyAsHtml `
